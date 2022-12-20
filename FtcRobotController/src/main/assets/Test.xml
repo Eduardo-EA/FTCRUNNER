@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="Wires" size="0.230000 0.164060" />
+    <ImageTarget name="powerstand" size="0.230000 0.162009" />
+    <ImageTarget name="motherboard" size="0.230000 0.163491" />
+    <ImageTarget name="engine" size="0.230000 0.164855" />
+  </Tracking>
+</QCARConfig>
