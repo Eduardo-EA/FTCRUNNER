@@ -38,10 +38,6 @@ public class ImuOmniDrive extends LinearOpMode {
     BNO055IMU BNO055;
     Orientation angles;
 
-
-    // double ServoStartPosition = 0.0;
-
-    //double servoPos;
     boolean oldServoButton;
     boolean oldcontrol;
 
@@ -67,7 +63,6 @@ public class ImuOmniDrive extends LinearOpMode {
         RightServo.setPosition(.35);
         LeftServo.setPosition(.65);
 
-        //  servoPos = 0;
         oldServoButton = false;
         oldcontrol = false;
 
@@ -148,8 +143,6 @@ public class ImuOmniDrive extends LinearOpMode {
             RightBackDrive.setPower(rightBackPower *2/3);
 
 
-           // double Close = 0.0;
-          //  double Open = 1.0;
 
             //grab cone
             if (gamepad2.right_bumper) {
@@ -162,7 +155,7 @@ public class ImuOmniDrive extends LinearOpMode {
             }
 
 
-/*
+            /*  Will switch Lift Motor control from controller 2 to controller 1
             boolean control = gamepad1.start;
 
             if(gamepad1.start && !oldcontrol){
@@ -178,40 +171,10 @@ public class ImuOmniDrive extends LinearOpMode {
             LiftMotor.setPower(gamepad2.right_trigger);
             LiftMotor.setPower(-gamepad2.left_trigger);
 
-
-
-
-
-/*
-            boolean servoButton = gamepad1.right_bumper;
-
-            if (servoButton && !oldServoButton) {
-                if(servoPos == 0) {
-                    RightServo.setPosition(0);
-                    LeftServo.setPosition(1);  // Change these values
-                    servoPos = 1;
-                }
-                else{
-                    RightServo.setPosition(.5);
-                    LeftServo.setPosition(.5);  // Change these values
-                    servoPos = 0;
-                }
-
-            }
-
-            oldServoButton = servoButton;
-            /*
- */
-
-
-
-
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("YAW", angles.firstAngle);
-           // telemetry.addData("Roll", angles.secondAngle);
-           // telemetry.addData("Pitch", angles.thirdAngle);
             telemetry.update();
 
 
