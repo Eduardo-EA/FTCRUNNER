@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.AutoForCOmp;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,8 +12,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -61,7 +58,7 @@ public class RightVersion2 extends LinearOpMode
     int RIGHT = 3;
 
     AprilTagDetection tagOfInterest = null;
-
+/*
     // This enum defines our "state"
     // This is essentially just defines the possible steps our program will take
     enum State {
@@ -74,11 +71,12 @@ public class RightVersion2 extends LinearOpMode
         IDLE            // Our bot will enter the IDLE state when done
     }
 
+ */
+
     // We define the current state we're on
     // Default to IDLE
-    State currentState = State.IDLE;
+   // State currentState = State.IDLE;
     // Define our start pose
-    // This assumes we start at x: 15, y: 10, heading: 180 degrees
     Pose2d startPose = new Pose2d(37.8,-62, Math.toRadians(90));
 
 
@@ -128,11 +126,9 @@ public class RightVersion2 extends LinearOpMode
                 .lineToLinearHeading(new Pose2d(56,-12, Math.toRadians(0)))
                 .build();
 
-
         Trajectory trajectory7 = drive.trajectoryBuilder(trajectory6.end())
                 .lineToLinearHeading(new Pose2d(35,-12, Math.toRadians(135)))
                 .build();
-
         Trajectory trajectory8 = drive.trajectoryBuilder(trajectory7.end())
                 .lineToLinearHeading(new Pose2d(32,-8, Math.toRadians(135)))
                 .build();
