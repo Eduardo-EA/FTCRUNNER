@@ -247,7 +247,7 @@ public class LeftScore extends LinearOpMode
         }
         //left 1 middle 2 Right 3
         /* Actually do something useful */
-        if(tagOfInterest.id == LEFT){ //1
+       /* if(tagOfInterest.id == LEFT){ //1
             //trajectory
             drive.followTrajectory(one);
             drive.followTrajectory(seven);
@@ -289,6 +289,62 @@ public class LeftScore extends LinearOpMode
             drive.followTrajectory(ten);
 
 
+        }
+
+        */
+
+
+        if(tagOfInterest == null){
+            drive.followTrajectory(one);
+            drive.followTrajectory(seven);
+            drive.followTrajectorySequence(turn2);
+            drive.followTrajectory(five);
+            // LiftMotor.setPower(-.3);
+            // sleep(300);
+            //  LiftMotor.setPower(0);
+            drive.followTrajectory(six);
+        }else{
+            switch(tagOfInterest.id){
+                case 1:
+                    drive.followTrajectory(one);
+                    drive.followTrajectory(seven);
+                    drive.followTrajectorySequence(turn2);
+                    drive.followTrajectory(five);
+                    // LiftMotor.setPower(-.3);
+                    // sleep(300);
+                    //  LiftMotor.setPower(0);
+                    drive.followTrajectory(six);
+                    drive.followTrajectory(nine);
+                    drive.followTrajectorySequence(turn3);
+                    drive.followTrajectory(eight);
+                    drive.turn(Math.toRadians(4));
+
+                    break;
+
+                case 2:
+                    drive.followTrajectory(one);
+                    drive.followTrajectory(seven);
+                    drive.followTrajectorySequence(turn2);
+                    drive.followTrajectory(five);
+                    // LiftMotor.setPower(-.3);
+                    // sleep(300);
+                    //  LiftMotor.setPower(0);
+                    drive.followTrajectory(six);
+                    break;
+
+                case 3:drive.followTrajectory(one);
+                    drive.followTrajectory(three);
+                    drive.followTrajectory(four);
+                    drive.followTrajectorySequence(turn);
+                    drive.followTrajectory(five);
+                    // LiftMotor.setPower(-.3);
+                    // sleep(300);
+                    //  LiftMotor.setPower(0);
+                    drive.followTrajectory(six);
+                    drive.followTrajectory(ten);
+
+                    break;
+            }
         }
 
 
