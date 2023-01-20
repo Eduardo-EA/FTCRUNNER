@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.AutoForCOmp;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -19,21 +19,14 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
+@Config
 @Autonomous
-public class RightVersion2 extends LinearOpMode
+public class LeftPark extends LinearOpMode
 {
 
     Servo RightServo;
     Servo LeftServo;
     DcMotor LiftMotor;
-
-
-
-    static final double COUNTS_PER_MOTOR_REV = 3895.9;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing.
-    static final double WHEEL_DIAMETER_INCHES = 3.77953;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -52,32 +45,12 @@ public class RightVersion2 extends LinearOpMode
     // UNITS ARE METERS
     double tagsize = 0.166;
 
-     // Tag ID 1,2,3 from the 36h11 family
+    // Tag ID 1,2,3 from the 36h11 family
     int LEFT = 1;
     int MIDDLE = 2;
     int RIGHT = 3;
 
     AprilTagDetection tagOfInterest = null;
-/*
-    // This enum defines our "state"
-    // This is essentially just defines the possible steps our program will take
-    enum State {
-        TRAJECTORY_1,   // First, follow a splineTo() trajectory
-        TRAJECTORY_2,   // Then, follow a lineTo() trajectory
-        TURN_1,         // Then we want to do a point turn
-        TRAJECTORY_3,   // Then, we follow another lineTo() trajectory
-        WAIT_1,         // Then we're gonna wait a second
-        TURN_2,         // Finally, we're gonna turn again
-        IDLE            // Our bot will enter the IDLE state when done
-    }
-
- */
-
-    // We define the current state we're on
-    // Default to IDLE
-   // State currentState = State.IDLE;
-    // Define our start pose
-    Pose2d startPose = new Pose2d(37.8,-62, Math.toRadians(90));
 
 
     @Override
@@ -88,56 +61,28 @@ public class RightVersion2 extends LinearOpMode
         LeftServo = hardwareMap.get(Servo.class,"LeftServo");
 
         //Close servos
-        RightServo.setPosition(.55);
-        LeftServo.setPosition(.48);
+        RightServo.setPosition(.35);
+        LeftServo.setPosition(.65);
+
 
         LiftMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
         LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+
         LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-            //Lift Motor THe speed is 1
-
-        drive.setPoseEstimate(startPose);
-
+        //Lift Motor THe speed is 1
         LiftMotor.setPower(LiftSpeed);
-        sleep(250);    //Change sleep timer for the duration of the motor lift
+        sleep(500);    //Change sleep timer for the duration of the motor lift
         LiftMotor.setPower(0);
 
-        Trajectory trajectory1 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(37.8,-61))
-                .build();
-        Trajectory trajectory2 = drive.trajectoryBuilder(trajectory1.end())
-                .strafeTo(new Vector2d(12.8,-62))
-                .build();
-        Trajectory trajectory3 = drive.trajectoryBuilder(trajectory2.end())
-                .splineToLinearHeading(new Pose2d(13,-61, Math.toRadians(90)),Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(12.8,-10, Math.toRadians(45)), Math.toRadians(90))
-                .build();
-        Trajectory trajectory4 = drive.trajectoryBuilder(trajectory3.end())
-                .lineTo(new Vector2d(14.8,-8))
-                .build();
-        Trajectory trajectory5 = drive.trajectoryBuilder(trajectory4.end())
-                .lineToLinearHeading(new Pose2d(12.8,-12, Math.toRadians(0)))
-                .build();
-        Trajectory trajectory6 = drive.trajectoryBuilder(trajectory5.end())
-                .lineToLinearHeading(new Pose2d(56,-12, Math.toRadians(0)))
-                .build();
 
-        Trajectory trajectory7 = drive.trajectoryBuilder(trajectory6.end())
-                .lineToLinearHeading(new Pose2d(35,-12, Math.toRadians(135)))
-                .build();
-        Trajectory trajectory8 = drive.trajectoryBuilder(trajectory7.end())
-                .lineToLinearHeading(new Pose2d(32,-8, Math.toRadians(135)))
-                .build();
-        Trajectory trajectory9 = drive.trajectoryBuilder(trajectory8.end())
-                .lineToLinearHeading(new Pose2d(35,-12, Math.toRadians(0)))
-                .build();
-        Trajectory trajectory10 = drive.trajectoryBuilder(trajectory9.end())
-                .lineToLinearHeading(new Pose2d(56,-12, Math.toRadians(0)))
-                .build();
+        //If you want to add more movement copy and paste the code above line 120 to 122
+
 
         if (isStopRequested()) return;
 
@@ -163,6 +108,26 @@ public class RightVersion2 extends LinearOpMode
 
             }
         });
+
+
+
+        Trajectory one = drive.trajectoryBuilder(new Pose2d())
+                .forward(.5)
+                .build();
+
+        Trajectory two = drive.trajectoryBuilder(one.end())
+                .strafeLeft(7)
+                .build();
+
+        Trajectory three = drive.trajectoryBuilder(one.end())
+                .strafeRight(6.3)
+                .build();
+
+        Trajectory four = drive.trajectoryBuilder(one.end())
+                .forward(5)
+                .build();
+
+
 
         telemetry.setMsTransmissionInterval(50);
 
@@ -244,43 +209,27 @@ public class RightVersion2 extends LinearOpMode
         /* Actually do something useful */
         if(tagOfInterest.id == LEFT){ //1
             //trajectory
-            drive.followTrajectory(trajectory1);
-            drive.followTrajectory(trajectory2);
-            drive.followTrajectory(trajectory3);
-            drive.followTrajectory(trajectory4);
-            drive.followTrajectory(trajectory5);
-            drive.followTrajectory(trajectory6);
-            drive.followTrajectory(trajectory7);
-            drive.followTrajectory(trajectory8);
-            drive.followTrajectory(trajectory9);
-            drive.followTrajectory(trajectory10);
+            drive.followTrajectory(one);
+            drive.followTrajectory(two);
+            drive.followTrajectory(four);
+
 
 
         }else if(tagOfInterest.id == MIDDLE){ //2
-            drive.followTrajectory(trajectory1);
-            drive.followTrajectory(trajectory2);
-            drive.followTrajectory(trajectory3);
-            drive.followTrajectory(trajectory4);
-            drive.followTrajectory(trajectory5);
-            drive.followTrajectory(trajectory6);
-            drive.followTrajectory(trajectory7);
-            drive.followTrajectory(trajectory8);
-            drive.followTrajectory(trajectory9);
-            drive.followTrajectory(trajectory10);
+            drive.followTrajectory(one);
+            drive.followTrajectory(four);
+
+
+
 
 
 
         }else{ //3
-            drive.followTrajectory(trajectory1);
-            drive.followTrajectory(trajectory2);
-            drive.followTrajectory(trajectory3);
-            drive.followTrajectory(trajectory4);
-            drive.followTrajectory(trajectory5);
-            drive.followTrajectory(trajectory6);
-            drive.followTrajectory(trajectory7);
-            drive.followTrajectory(trajectory8);
-            drive.followTrajectory(trajectory9);
-            drive.followTrajectory(trajectory10);
+            drive.followTrajectory(one);
+            drive.followTrajectory(three);
+            drive.followTrajectory(four);
+
+
 
 
         }
@@ -290,32 +239,18 @@ public class RightVersion2 extends LinearOpMode
 
 
     }
-/*
-    private void encoderDrive(double LiftMotorInches){
-        int newLiftMotorTarget;
 
-        if (opModeIsActive()) {
-            newLiftMotorTarget = LiftMotor.getCurrentPosition() + (int)(LiftMotorInches * COUNTS_PER_INCH);
-
-            LiftMotor.setTargetPosition(newLiftMotorTarget);
-            LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            runtime.reset();
-            LiftMotor.setPower(Math.abs(LiftSpeed));
-
-        }
-    }
-
- */
 
     void tagToTelemetry(AprilTagDetection detection)
     {
         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
+       /* telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+
+        */
     }
 }

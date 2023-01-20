@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.AutoForCOmp;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -20,22 +19,14 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
+@Config
 @Autonomous
-@Disabled
-public class LeftCamForAuto extends LinearOpMode
+public class RIghtPark extends LinearOpMode
 {
 
     Servo RightServo;
     Servo LeftServo;
     DcMotor LiftMotor;
-
-
-
-    static final double COUNTS_PER_MOTOR_REV = 3895.9;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing.
-    static final double WHEEL_DIAMETER_INCHES = 3.77953;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
-
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
@@ -70,8 +61,9 @@ public class LeftCamForAuto extends LinearOpMode
         LeftServo = hardwareMap.get(Servo.class,"LeftServo");
 
         //Close servos
-        RightServo.setPosition(.55);
-        LeftServo.setPosition(.48);
+        RightServo.setPosition(.35);
+        LeftServo.setPosition(.65);
+
 
         LiftMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
         LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -85,51 +77,10 @@ public class LeftCamForAuto extends LinearOpMode
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         //Lift Motor THe speed is 1
         LiftMotor.setPower(LiftSpeed);
-        sleep(250);    //Change sleep timer for the duration of the motor lift
+        sleep(500);    //Change sleep timer for the duration of the motor lift
         LiftMotor.setPower(0);
 
-        Trajectory Forward_1in = drive.trajectoryBuilder(new Pose2d())
-                .forward(1)  //change the values here to make the robot movement increase or decrease.  + for Forward - for reverse
-                .build();
 
-        Trajectory StrafeLeft = drive.trajectoryBuilder(Forward_1in.end())
-                .strafeRight(5)  //if you want to strafe right you do .strafeRight() you can not just add a negative
-                .build();
-        Trajectory Forward_6in = drive.trajectoryBuilder(StrafeLeft.end())
-                .forward(6.3)
-                .build();
-
-        TrajectorySequence turn_2 = drive.trajectorySequenceBuilder(Forward_6in.end())
-                .turn(Math.toRadians(1.6)) //change here to change the degree of the turn
-                .build();
-        TrajectorySequence turn_75 = drive.trajectorySequenceBuilder(turn_2.end())
-                .turn(Math.toRadians(-7.5))
-                .build();
-
-
-        Trajectory Forward_1_8 = drive.trajectoryBuilder(turn_75.end())
-                .forward(1.8)
-                .build();
-        Trajectory Backward_1_8 = drive.trajectoryBuilder(Forward_1_8.end())
-                .forward(-1.8)
-                .build();
-
-
-        TrajectorySequence Turn90 = drive.trajectorySequenceBuilder(Forward_6in.end())
-                .turn(Math.toRadians(-90))
-                .build();
-        Trajectory swaferight = drive.trajectoryBuilder(Turn90.end())
-                .strafeRight(2)
-                .build();
-        Trajectory swaferight2 = drive.trajectoryBuilder(Turn90.end())
-                .strafeRight(4)
-                .build();
-        Trajectory swafeleft2 = drive.trajectoryBuilder(swaferight2.end())
-                .strafeLeft(2)
-                .build();
-        Trajectory swafeleft3 = drive.trajectoryBuilder(swafeleft2.end())
-                .strafeLeft(4)
-                .build();
         //If you want to add more movement copy and paste the code above line 120 to 122
 
 
@@ -157,6 +108,26 @@ public class LeftCamForAuto extends LinearOpMode
 
             }
         });
+
+
+
+        Trajectory one = drive.trajectoryBuilder(new Pose2d())
+                .forward(.5)
+                .build();
+
+        Trajectory two = drive.trajectoryBuilder(one.end())
+                .strafeLeft(7)
+                .build();
+
+        Trajectory three = drive.trajectoryBuilder(one.end())
+                .strafeRight(6.5)
+                .build();
+
+        Trajectory four = drive.trajectoryBuilder(one.end())
+                .forward(5)
+                .build();
+
+
 
         telemetry.setMsTransmissionInterval(50);
 
@@ -238,58 +209,23 @@ public class LeftCamForAuto extends LinearOpMode
         /* Actually do something useful */
         if(tagOfInterest.id == LEFT){ //1
             //trajectory
-
-
-            drive.followTrajectory(Forward_1in);
-            drive.followTrajectory(StrafeLeft);
-            drive.followTrajectory(Forward_6in);
-            drive.followTrajectorySequence(turn_2);
-
-            LiftMotor.setPower(LiftSpeed);
-            sleep(2400);
-            LiftMotor.setPower(0);
-
-            drive.followTrajectorySequence(turn_75);
-            drive.followTrajectory(Forward_1_8);
-            drive.followTrajectory(Backward_1_8);
-
-            LiftMotor.setPower(-1);
-            sleep(2400);
-            LiftMotor.setPower(0);
-
-
-
-
-
-
+            drive.followTrajectory(one);
+            drive.followTrajectory(two);
+            drive.followTrajectory(four);
 
 
 
         }else if(tagOfInterest.id == MIDDLE){ //2
-
-            drive.followTrajectory(Forward_1in);
-            drive.followTrajectory(StrafeLeft);
-            drive.followTrajectory(Forward_6in);
-            drive.followTrajectorySequence(turn_2);
-
-            drive.followTrajectory(swafeleft2);
+            drive.followTrajectory(one);
+            drive.followTrajectory(four);
 
 
-
-        }else if (tagOfInterest.id == RIGHT){ //3
-
-            drive.followTrajectory(Forward_1in);
-            drive.followTrajectory(StrafeLeft);
-            drive.followTrajectory(Forward_6in);
-            drive.followTrajectorySequence(turn_2);
+        }else{ //3
 
 
-
-            drive.followTrajectory(swafeleft3);
-
-
-
-
+            drive.followTrajectory(one);
+            drive.followTrajectory(three);
+            drive.followTrajectory(four);
 
 
 
@@ -297,35 +233,19 @@ public class LeftCamForAuto extends LinearOpMode
 
 
 
-
-
-    }
-/*
-    private void encoderDrive(double LiftMotorInches){
-        int newLiftMotorTarget;
-
-        if (opModeIsActive()) {
-            newLiftMotorTarget = LiftMotor.getCurrentPosition() + (int)(LiftMotorInches * COUNTS_PER_INCH);
-
-            LiftMotor.setTargetPosition(newLiftMotorTarget);
-            LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            runtime.reset();
-            LiftMotor.setPower(Math.abs(LiftSpeed));
-
-        }
     }
 
- */
 
     void tagToTelemetry(AprilTagDetection detection)
     {
         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
+       /* telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
         telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+
+        */
     }
 }

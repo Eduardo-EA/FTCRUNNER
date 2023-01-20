@@ -3,27 +3,25 @@ package org.firstinspires.ftc.teamcode.AutoForCOmp;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.AutoForCOmp.CamTune.Section1;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-
 import java.util.ArrayList;
 
 @Autonomous
+@Disabled
 public class RightCamForAuto extends LinearOpMode
 {
 
@@ -31,12 +29,6 @@ public class RightCamForAuto extends LinearOpMode
     Servo LeftServo;
     DcMotor LiftMotor;
 
-
-
-    static final double COUNTS_PER_MOTOR_REV = 3895.9;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing.
-    static final double WHEEL_DIAMETER_INCHES = 3.77953;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
 
     OpenCvCamera camera;
@@ -72,8 +64,8 @@ public class RightCamForAuto extends LinearOpMode
         LeftServo = hardwareMap.get(Servo.class,"LeftServo");
 
         //Close servos
-        RightServo.setPosition(.55);
-        LeftServo.setPosition(.48);
+        RightServo.setPosition(.35);
+        LeftServo.setPosition(.65);
 
         LiftMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
         LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -90,43 +82,6 @@ public class RightCamForAuto extends LinearOpMode
         sleep(250);    //Change sleep timer for the duration of the motor lift
         LiftMotor.setPower(0);
 
-        Trajectory Forward_1in = drive.trajectoryBuilder(new Pose2d())
-                .forward(1)  //change the values here to make the robot movement increase or decrease.  + for Forward - for reverse
-                .build();
-
-        Trajectory StrafeLeft = drive.trajectoryBuilder(Forward_1in.end())
-                .strafeLeft(5.4)  //if you want to strafe right you do .strafeRight() you can not just add a negative
-                .build();
-
-        Trajectory Forward_6in = drive.trajectoryBuilder(StrafeLeft.end())
-                .forward(6.3)
-                .build();
-
-
-        TrajectorySequence turn_75 = drive.trajectorySequenceBuilder(Forward_6in.end())
-                .turn(Math.toRadians(-9.1))
-                .build();
-
-       Trajectory Forward_1_8 = drive.trajectoryBuilder(turn_75.end())
-               .forward(1.8)
-                .build();
-        Trajectory Backward_1_8 = drive.trajectoryBuilder(Forward_1_8.end())
-                .forward(-1.8)
-                .build();
-
-        TrajectorySequence Turn90 = drive.trajectorySequenceBuilder(Forward_6in.end())
-                .turn(Math.toRadians(-90))
-                .build();
-        Trajectory swaferight = drive.trajectoryBuilder(Turn90.end())
-                .strafeRight(5.5)
-                .build();
-        Trajectory swaferight2 = drive.trajectoryBuilder(Turn90.end())
-                .strafeRight(9.1)
-                .build();
-        TrajectorySequence straighten = drive.trajectorySequenceBuilder(Backward_1_8.end())
-                .turn(9.1)
-                .build();
-        //If you want to add more movement copy and paste the code above line 120 to 122
 
 
         if (isStopRequested()) return;
@@ -154,9 +109,36 @@ public class RightCamForAuto extends LinearOpMode
             }
         });
 
+        Trajectory Forward_6in = drive.trajectoryBuilder(new Pose2d())
+                .forward(7)
+                .build();
+        TrajectorySequence turn = drive.trajectorySequenceBuilder(Forward_6in.end())
+                .turn(Math.toRadians(12))
+                .build();
+        TrajectorySequence otherturn = drive.trajectorySequenceBuilder(Forward_6in.end())
+                .turn(-12)
+                .build();
+        Trajectory FOrward = drive.trajectoryBuilder(turn.end())
+                .forward(3)
+                .build();
+
+
+
+
+
+
+
+
+        //If you want to add more movement copy and paste the code above line 120 to 122
+
+
         telemetry.setMsTransmissionInterval(50);
 
 //rep wait for start
+
+
+
+
         while (!isStarted() && !isStopRequested())
         {
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
@@ -235,45 +217,18 @@ public class RightCamForAuto extends LinearOpMode
         if(tagOfInterest.id == LEFT){ //1
             //trajectory
 
-
-            drive.followTrajectory(Forward_1in);
-            drive.followTrajectory(StrafeLeft);
             drive.followTrajectory(Forward_6in);
-            drive.followTrajectorySequence(turn_75);
+            drive.followTrajectorySequence(turn);
+            drive.followTrajectory(FOrward);
 
-            LiftMotor.setPower(LiftSpeed);
-            sleep(3000);
-            LiftMotor.setPower(0);
-
-            drive.followTrajectory(Forward_1_8);
-
-            RightServo.setPosition(.35);
-            LeftServo.setPosition(.65);
-
-            drive.followTrajectory(Backward_1_8);
-            drive.followTrajectorySequence(straighten);
-
-            
         }else if(tagOfInterest.id == MIDDLE){ //2
 
-            drive.followTrajectory(Forward_1in);
-            drive.followTrajectory(StrafeLeft);
             drive.followTrajectory(Forward_6in);
-
-            drive.followTrajectory(swaferight);
-
-
 
         }else{ //3
-
-            drive.followTrajectory(Forward_1in);
-            drive.followTrajectory(StrafeLeft);
             drive.followTrajectory(Forward_6in);
-
-            drive.followTrajectory(swaferight2);
-
-
-
+            drive.followTrajectorySequence(otherturn);
+            drive.followTrajectory(FOrward);
 
         }
 

@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -22,15 +23,16 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
 
-@TeleOp(name="THIS IS THE TELOP FOR COMP!!!!!", group="Linear Opmode")
-public class ImuOmniDrive extends LinearOpMode {
+@TeleOp(name="TEst", group="Linear Opmode")
+public class imuV2 extends LinearOpMode {
     final ElapsedTime runtime = new ElapsedTime();  //delete final if prob
-    DcMotor RightFrontDrive;
-    DcMotor LeftFrontDrive;
-    DcMotor RightBackDrive;
-    DcMotor LeftBackDrive;
+    DcMotor RightFrontDrive = null;
+    DcMotor LeftFrontDrive = null;
+    DcMotor RightBackDrive = null;
+    DcMotor LeftBackDrive = null;
 
-    DcMotor LiftMotor;
+
+    DcMotor LiftMotor = null;
 
     Servo RightServo;
     Servo LeftServo;
@@ -42,9 +44,13 @@ public class ImuOmniDrive extends LinearOpMode {
     boolean oldcontrol;
 
 
+    static final double     Lift_Speed              = 1;
+
+
+
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         BNO055 = hardwareMap.get(BNO055IMU.class, "IMU");
@@ -56,6 +62,22 @@ public class ImuOmniDrive extends LinearOpMode {
         LeftBackDrive = hardwareMap.get(DcMotor.class, "LeftBackDrive");
 
         LiftMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
+
+        LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        telemetry.setAutoClear(false);
+        Telemetry.Item LiftMotorPosition = telemetry.addData("Lift Motor Position", LiftMotor.getCurrentPosition());
+
+        while(!isStarted()){
+            LiftMotorPosition.setValue(LiftMotor.getCurrentPosition());
+            telemetry.update();
+        }
+        int Lifttarget = 0;
+        double Liftspeed = 1;
+        String LiftcurrentDirection = "Ground ";
+
 
         RightServo = hardwareMap.get(Servo.class, "RightServo");
         LeftServo = hardwareMap.get(Servo.class, "LeftServo");
@@ -71,6 +93,7 @@ public class ImuOmniDrive extends LinearOpMode {
         RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         LeftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         LeftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -153,15 +176,47 @@ public class ImuOmniDrive extends LinearOpMode {
                 RightServo.setPosition(.55);
                 LeftServo.setPosition(.48);
             }
-
+            
 
             LiftMotor.setPower(gamepad2.right_trigger);
             LiftMotor.setPower(-gamepad2.left_trigger);
+
+            if (gamepad2.dpad_up) { //Lift up High
+                Lifttarget = 200;
+                Liftspeed = 1;
+                LiftcurrentDirection = "High";
+                LiftMotor.setPower(Liftspeed);
+                LiftMotor.setTargetPosition(Lifttarget);
+            } else if (gamepad2.dpad_right) {   // mid
+              Lifttarget = 100;
+              Liftspeed = 1;
+              LiftcurrentDirection = "mid";
+                LiftMotor.setPower(Liftspeed);
+                LiftMotor.setTargetPosition(Lifttarget);
+            } else if (gamepad2.dpad_down){ //low
+                Lifttarget = 50;
+                Liftspeed = 1;
+                LiftcurrentDirection = "mid";
+                LiftMotor.setPower(Liftspeed);
+                LiftMotor.setTargetPosition(Lifttarget);
+            }
+            if ( LiftcurrentDirection == "down" && (LiftMotor.getTargetPosition() < 5)) {
+                Liftspeed = 0;
+                LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+            idle();
+
+            if (LiftMotor.isBusy()) {
+                LiftMotorPosition.setValue(LiftMotor.getCurrentPosition());
+                telemetry.update();
+            }
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("YAW", angles.firstAngle);
+            telemetry.addData("Starting at",  "%7d :%7d", LiftMotor.getCurrentPosition());
+            telemetry.update();
             telemetry.update();
 
 
