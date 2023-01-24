@@ -56,6 +56,7 @@ public class ImuOmniDrive extends LinearOpMode {
         LeftBackDrive = hardwareMap.get(DcMotor.class, "LeftBackDrive");
 
         LiftMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
+        LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         RightServo = hardwareMap.get(Servo.class, "RightServo");
         LeftServo = hardwareMap.get(Servo.class, "LeftServo");

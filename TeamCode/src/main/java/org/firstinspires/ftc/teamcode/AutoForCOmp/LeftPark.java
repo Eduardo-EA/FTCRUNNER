@@ -207,32 +207,54 @@ public class LeftPark extends LinearOpMode
         }
         //left 1 middle 2 Right 3
         /* Actually do something useful */
-        if(tagOfInterest.id == LEFT){ //1
+      /*  if(tagOfInterest.id == LEFT){ //1
             //trajectory
             drive.followTrajectory(one);
             drive.followTrajectory(two);
             drive.followTrajectory(four);
 
-
-
         }else if(tagOfInterest.id == MIDDLE){ //2
             drive.followTrajectory(one);
             drive.followTrajectory(four);
-
-
-
-
-
 
         }else{ //3
             drive.followTrajectory(one);
             drive.followTrajectory(three);
             drive.followTrajectory(four);
 
-
-
-
         }
+
+       */
+
+
+        if(tagOfInterest == null){
+            drive.followTrajectory(one);
+            drive.followTrajectory(four);
+
+        }else{
+            switch(tagOfInterest.id){
+                case 1:
+                    drive.followTrajectory(one);
+                    drive.followTrajectory(two);
+                    drive.followTrajectory(four);
+
+                    break;
+
+                case 2:
+                    drive.followTrajectory(one);
+                    drive.followTrajectory(four);
+
+                    break;
+
+                case 3:drive.followTrajectory(one);
+                    drive.followTrajectory(one);
+                    drive.followTrajectory(three);
+                    drive.followTrajectory(four);
+
+                    break;
+            }
+        }
+
 
 
 

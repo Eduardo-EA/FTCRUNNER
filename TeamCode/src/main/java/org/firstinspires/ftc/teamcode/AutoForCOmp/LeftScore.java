@@ -133,6 +133,10 @@ public class LeftScore extends LinearOpMode
         LiftMotor.setPower(LiftSpeed);
         sleep(1900);
         LiftMotor.setPower(0);
+
+        LiftMotor.setPower(-.4);
+        sleep(500);
+        LiftMotor.setPower(0);
     })
                 .build();
 
@@ -140,7 +144,7 @@ public class LeftScore extends LinearOpMode
                 .turn(Math.toRadians(-8.8))
                 .build();
         Trajectory six = drive.trajectoryBuilder(turn.end())
-                .forward(.7)
+                .forward(.09)
                 .addDisplacementMarker(()->{
                     sleep(500);
                     RightServo.setPosition(.55);
@@ -151,7 +155,7 @@ public class LeftScore extends LinearOpMode
                         .forward(7)
                                 .build();
         TrajectorySequence turn2 = drive.trajectorySequenceBuilder(four.end())
-                .turn(Math.toRadians(-6))
+                .turn(Math.toRadians(-6.5))
                 .build();
         Trajectory eight = drive.trajectoryBuilder(one.end())
                 .strafeLeft(6)
@@ -160,12 +164,29 @@ public class LeftScore extends LinearOpMode
                 .forward(-1.7)
                 .build();
         TrajectorySequence turn3 = drive.trajectorySequenceBuilder(four.end())
-                .turn(Math.toRadians(6))
+                .turn(Math.toRadians(8))
                 .build();
         Trajectory ten = drive.trajectoryBuilder(six.end())
+                .forward(-1)
+                .build();
+        TrajectorySequence turn4 = drive.trajectorySequenceBuilder(four.end())
+                .turn(Math.toRadians(7))
+                .build();
+        Trajectory strafe = drive.trajectoryBuilder(turn3.end())
+                .strafeRight(6.3)
+                .build();
+        TrajectorySequence turn5 = drive.trajectorySequenceBuilder(seven.end())
+                .turn(Math.toRadians(-7.5))
+                .build();
+        Trajectory backwards = drive.trajectoryBuilder(strafe.end())
+                .forward(-1)
+                .build();
+        Trajectory bitforwards = drive.trajectoryBuilder(turn5.end())
+                .forward(.5) // was .2 orginally
+                .build();
+        Trajectory park2back = drive.trajectoryBuilder(ten.end())
                 .forward(-2)
-                        .build();
-
+                .build();
 
 
 
@@ -299,49 +320,53 @@ public class LeftScore extends LinearOpMode
             drive.followTrajectory(seven);
             drive.followTrajectorySequence(turn2);
             drive.followTrajectory(five);
-            // LiftMotor.setPower(-.3);
-            // sleep(300);
-            //  LiftMotor.setPower(0);
             drive.followTrajectory(six);
+            drive.followTrajectory(ten);
+            drive.followTrajectorySequence(turn4);
         }else{
             switch(tagOfInterest.id){
                 case 1:
                     drive.followTrajectory(one);
                     drive.followTrajectory(seven);
-                    drive.followTrajectorySequence(turn2);
+                    drive.followTrajectorySequence(turn5);
+                    drive.followTrajectory(bitforwards);
                     drive.followTrajectory(five);
-                    // LiftMotor.setPower(-.3);
-                    // sleep(300);
-                    //  LiftMotor.setPower(0);
+
                     drive.followTrajectory(six);
                     drive.followTrajectory(nine);
                     drive.followTrajectorySequence(turn3);
                     drive.followTrajectory(eight);
-                    drive.turn(Math.toRadians(4));
+
 
                     break;
 
                 case 2:
                     drive.followTrajectory(one);
                     drive.followTrajectory(seven);
-                    drive.followTrajectorySequence(turn2);
+                    drive.followTrajectorySequence(turn5);
+                    drive.followTrajectory(bitforwards);
                     drive.followTrajectory(five);
-                    // LiftMotor.setPower(-.3);
-                    // sleep(300);
-                    //  LiftMotor.setPower(0);
-                    drive.followTrajectory(six);
-                    break;
 
-                case 3:drive.followTrajectory(one);
-                    drive.followTrajectory(three);
-                    drive.followTrajectory(four);
-                    drive.followTrajectorySequence(turn);
-                    drive.followTrajectory(five);
-                    // LiftMotor.setPower(-.3);
-                    // sleep(300);
-                    //  LiftMotor.setPower(0);
                     drive.followTrajectory(six);
                     drive.followTrajectory(ten);
+                    drive.turn(Math.toRadians(8.5));
+                    drive.followTrajectory(park2back);
+                    break;
+
+                case 3:
+                    drive.followTrajectory(one);
+                    drive.followTrajectory(seven);
+                    drive.followTrajectorySequence(turn5);
+                    drive.followTrajectory(five);
+
+                    drive.followTrajectory(six);
+                    drive.followTrajectory(nine);
+                   // drive.followTrajectorySequence(turn3);
+                    drive.turn(Math.toRadians(7.5));
+                    drive.followTrajectory(strafe);
+                   // drive.followTrajectory(eight);
+                   // drive.followTrajectory(turn);
+                    drive.followTrajectory(backwards);
 
                     break;
             }

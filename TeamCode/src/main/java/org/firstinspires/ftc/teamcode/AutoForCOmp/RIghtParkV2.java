@@ -1,41 +1,34 @@
 package org.firstinspires.ftc.teamcode.AutoForCOmp;
 
+import android.annotation.SuppressLint;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
-
+//@Disabled
 @Config
 @Autonomous
-public class RIghtPark extends LinearOpMode
+public class RIghtParkV2 extends LinearOpMode
 {
-
-    Servo RightServo;
-    Servo LeftServo;
-    DcMotor LiftMotor;
+  //  private final ElapsedTime runtime = new ElapsedTime();
 
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
-
-    static final double FEET_PER_METER = 3.28084;
-
-    double LiftSpeed = 1;
-
-    private final ElapsedTime runtime = new ElapsedTime();
 
     double fx = 578.272;
     double fy = 578.272;
@@ -52,10 +45,18 @@ public class RIghtPark extends LinearOpMode
 
     AprilTagDetection tagOfInterest = null;
 
+ //   static final double FEET_PER_METER = 3.28084;
+
+    double LiftSpeed = 1;
+
+    Servo RightServo;
+    Servo LeftServo;
+    DcMotor LiftMotor;
 
     @Override
     public void runOpMode()
     {
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         RightServo = hardwareMap.get(Servo.class,"RightServo");
         LeftServo = hardwareMap.get(Servo.class,"LeftServo");
@@ -74,7 +75,7 @@ public class RIghtPark extends LinearOpMode
 
         LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
         //Lift Motor THe speed is 1
         LiftMotor.setPower(LiftSpeed);
         sleep(500);    //Change sleep timer for the duration of the motor lift
@@ -110,24 +111,33 @@ public class RIghtPark extends LinearOpMode
         });
 
 
-
-        Trajectory one = drive.trajectoryBuilder(new Pose2d())
-                .forward(.5)
+        TrajectorySequence SignalPark3 = drive.trajectorySequenceBuilder(new Pose2d(35.87, -60.07, Math.toRadians(90.00)))
+                .lineToLinearHeading(new Pose2d(36.00, -11.00, Math.toRadians(90.00)))
+                .lineToLinearHeading(new Pose2d(29.00, -5.00, Math.toRadians(138.62)))
+                .lineToLinearHeading(new Pose2d(36.27, -12.09, Math.toRadians(-28.86)))
+                .lineToLinearHeading(new Pose2d(60.62, -12.27, Math.toRadians(0.39)))
                 .build();
 
-        Trajectory two = drive.trajectoryBuilder(one.end())
-                .strafeLeft(7)
+        TrajectorySequence SignalPark2 = drive.trajectorySequenceBuilder(new Pose2d(35.45, -62.54, Math.toRadians(90.00)))
+                .lineToLinearHeading(new Pose2d(35.75, -12.59, Math.toRadians(90.00)))
+                .lineToLinearHeading(new Pose2d(31.09, -6.92, Math.toRadians(137.73)))
+                .lineToLinearHeading(new Pose2d(35.60, -12.30, Math.toRadians(265.49)))
+                .lineToLinearHeading(new Pose2d(36.33, -11.87, Math.toRadians(4.01)))
                 .build();
-
-        Trajectory three = drive.trajectoryBuilder(one.end())
-                .strafeRight(6.5)
+        TrajectorySequence SignalPark1 = drive.trajectorySequenceBuilder(new Pose2d(36.04, -63.26, Math.toRadians(90.00)))
+                .lineToConstantHeading(new Vector2d(36.47, -13.90))
+                .lineToLinearHeading(new Pose2d(31.23, -7.50, Math.toRadians(137.17)))
+                .lineToConstantHeading(new Vector2d(35.60, -11.58))
+                .lineToLinearHeading(new Pose2d(11.72, -11.87, Math.toRadians(-1.07)))
                 .build();
-
-        Trajectory four = drive.trajectoryBuilder(one.end())
-                .forward(5)
+        TrajectorySequence SignalNotDetected = drive.trajectorySequenceBuilder(new Pose2d(35.02, -62.97, Math.toRadians(90.00)))
+                .lineToLinearHeading(new Pose2d(36.18, -12.16, Math.toRadians(90.00)))
+                .lineToLinearHeading(new Pose2d(29.34, -5.31, Math.toRadians(139.40)))
+                .lineToLinearHeading(new Pose2d(36.18, -12.01, Math.toRadians(-9.73)))
+                .lineToLinearHeading(new Pose2d(60.93, -12.74, Math.toRadians(-0.36)))
+                .lineToLinearHeading(new Pose2d(36.18, -12.16, Math.toRadians(139.40)))
+                .lineToLinearHeading(new Pose2d(29.19, -5.02, Math.toRadians(139.40)))
                 .build();
-
-
 
         telemetry.setMsTransmissionInterval(50);
 
@@ -205,68 +215,30 @@ public class RIghtPark extends LinearOpMode
             telemetry.addLine("No tag snapshot available, it was never sighted during the init loop :(");
             telemetry.update();
         }
-        //left 1 middle 2 Right 3
-        /* Actually do something useful */
-       /* if(tagOfInterest.id == LEFT){ //1
-            //trajectory
-            drive.followTrajectory(one);
-            drive.followTrajectory(two);
-            drive.followTrajectory(four);
 
-
-
-        }else if(tagOfInterest.id == MIDDLE){ //2
-            drive.followTrajectory(one);
-            drive.followTrajectory(four);
-
-
-        }else{ //3
-
-
-            drive.followTrajectory(one);
-            drive.followTrajectory(three);
-            drive.followTrajectory(four);
-
-
-
-        }
-
-        */
 
         if(tagOfInterest == null){
-            drive.followTrajectory(one);
-            drive.followTrajectory(four);
+            drive.followTrajectorySequence(SignalNotDetected);
+
 
         }else{
             switch(tagOfInterest.id){
                 case 1:
-                    drive.followTrajectory(one);
-                    drive.followTrajectory(two);
-                    drive.followTrajectory(four);
-
+                    drive.followTrajectorySequence(SignalPark1);
                     break;
-
                 case 2:
-                    drive.followTrajectory(one);
-                    drive.followTrajectory(four);
-
+                   drive.followTrajectorySequence(SignalPark2);
                     break;
-
                 case 3:
-                    drive.followTrajectory(one);
-                    drive.followTrajectory(three);
-                    drive.followTrajectory(four);
-
-
+                   drive.followTrajectorySequence(SignalPark3);
                     break;
             }
         }
 
-
-
     }
 
 
+    @SuppressLint("DefaultLocale")
     void tagToTelemetry(AprilTagDetection detection)
     {
         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));

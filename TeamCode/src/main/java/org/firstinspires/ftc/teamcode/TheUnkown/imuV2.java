@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoForCOmp;
+package org.firstinspires.ftc.teamcode.TheUnkown;
 
 
 import static java.lang.Math.cos;
@@ -23,9 +23,10 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
 
-@TeleOp(name="TEst", group="Linear Opmode")
+@TeleOp(name="ImuV2", group="Linear Opmode")
 public class imuV2 extends LinearOpMode {
     final ElapsedTime runtime = new ElapsedTime();  //delete final if prob
+    PIDFORMOTOR control = new PIDFORMOTOR();
     DcMotor RightFrontDrive = null;
     DcMotor LeftFrontDrive = null;
     DcMotor RightBackDrive = null;
@@ -51,6 +52,7 @@ public class imuV2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         BNO055 = hardwareMap.get(BNO055IMU.class, "IMU");
@@ -64,8 +66,18 @@ public class imuV2 extends LinearOpMode {
         LiftMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
 
         LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        RightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        RightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LeftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LeftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        RightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         telemetry.setAutoClear(false);
         Telemetry.Item LiftMotorPosition = telemetry.addData("Lift Motor Position", LiftMotor.getCurrentPosition());
@@ -74,8 +86,8 @@ public class imuV2 extends LinearOpMode {
             LiftMotorPosition.setValue(LiftMotor.getCurrentPosition());
             telemetry.update();
         }
-        int Lifttarget = 0;
-        double Liftspeed = 1;
+        int Lifttarget;
+        double Liftspeed;
         String LiftcurrentDirection = "Ground ";
 
 
@@ -95,29 +107,31 @@ public class imuV2 extends LinearOpMode {
         LeftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        int targetPosition = 0;
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         waitForStart();
+
+
         runtime.reset();
 
         while (opModeIsActive()) {
+
+            double command = control.PIDControl(targetPosition,
+                                            LiftMotor.getCurrentPosition());
+         //   LiftMotor.setPower(command);
+
             if (gamepad1.a) {
 
-                // Get the calibration data
                 BNO055IMU.CalibrationData calibrationData = BNO055.readCalibrationData();
 
-                // Save the calibration data to a file. You can choose whatever file
-                // name you wish here, but you'll want to indicate the same file name
-                // when you initialize the IMU in an opmode in which it is used. If you
-                // have more than one IMU on your robot, you'll of course want to use
-                // different configuration file names for each.
-                String filename = "AdafruitIMUCalibration.json";
+                String filename = "daddywellman.json";
                 File file = AppUtil.getInstance().getSettingsFile(filename);
                 ReadWriteFile.writeFile(file, calibrationData.serialize());
                 telemetry.log().add("saved to '%s'", filename);
 
-                // Wait for the button to be released
                 while (gamepad1.a) {
                     telemetry.update();
                     idle();
@@ -165,8 +179,6 @@ public class imuV2 extends LinearOpMode {
             LeftBackDrive.setPower(leftBackPower *2/3);
             RightBackDrive.setPower(rightBackPower *2/3);
 
-
-
             //grab cone
             if (gamepad2.right_bumper) {
                 RightServo.setPosition(.35);
@@ -182,28 +194,19 @@ public class imuV2 extends LinearOpMode {
             LiftMotor.setPower(-gamepad2.left_trigger);
 
             if (gamepad2.dpad_up) { //Lift up High
-                Lifttarget = 200;
-                Liftspeed = 1;
-                LiftcurrentDirection = "High";
-                LiftMotor.setPower(Liftspeed);
-                LiftMotor.setTargetPosition(Lifttarget);
+                targetPosition = 500;
+                LiftMotor.setPower(command);
             } else if (gamepad2.dpad_right) {   // mid
-              Lifttarget = 100;
-              Liftspeed = 1;
-              LiftcurrentDirection = "mid";
-                LiftMotor.setPower(Liftspeed);
-                LiftMotor.setTargetPosition(Lifttarget);
+             targetPosition = 300;
+             LiftMotor.setPower(command);
             } else if (gamepad2.dpad_down){ //low
-                Lifttarget = 50;
-                Liftspeed = 1;
-                LiftcurrentDirection = "mid";
-                LiftMotor.setPower(Liftspeed);
-                LiftMotor.setTargetPosition(Lifttarget);
+               targetPosition = 100;
+               LiftMotor.setPower(command);
             }
-            if ( LiftcurrentDirection == "down" && (LiftMotor.getTargetPosition() < 5)) {
-                Liftspeed = 0;
-                LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            if (LiftcurrentDirection == "down") {
+                LiftMotor.getTargetPosition();
             }
+
             idle();
 
             if (LiftMotor.isBusy()) {
@@ -215,8 +218,7 @@ public class imuV2 extends LinearOpMode {
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("YAW", angles.firstAngle);
-            telemetry.addData("Starting at",  "%7d :%7d", LiftMotor.getCurrentPosition());
-            telemetry.update();
+            telemetry.addData("Starting at",  "%4.2f, %4.2f", LiftMotor.getCurrentPosition()); // commit put if error
             telemetry.update();
 
 
