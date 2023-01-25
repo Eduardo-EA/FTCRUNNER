@@ -8,12 +8,12 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class DriveConstants {
 
 
-    public static final double TICKS_PER_REV = 3895.9;
-    public static final double MAX_RPM = 43;
+    public static final double TICKS_PER_REV = 384.5;
+    public static final double MAX_RPM = 435;
 
 
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,  //Increase the P value first while the I and D is at zero
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,   //Increase the P value first while the I and D is at zero
             getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
     public static double WHEEL_RADIUS = 1.8898; // in
@@ -26,10 +26,10 @@ public class DriveConstants {
     public static double kStatic = 0;
 
 
-    public static double MAX_VEL = 6.705581321197392;
-    public static double MAX_ACCEL = 30;
-    public static double MAX_ANG_VEL = Math.toRadians(5.0568889617919925);
-    public static double MAX_ANG_ACCEL = Math.toRadians(180);
+    public static double MAX_VEL =  73.17330064499293;
+    public static double MAX_ACCEL = 73.17330064499293;
+    public static double MAX_ANG_VEL = Math.toRadians(270.4852451612903);
+    public static double MAX_ANG_ACCEL = Math.toRadians(270.4852451612903);
 
 
     public static double encoderTicksToInches(double ticks) {

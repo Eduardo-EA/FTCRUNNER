@@ -89,9 +89,7 @@ public class TwoWheelOdometry extends TwoTrackingWheelLocalizer {
     @NonNull
     @Override
     public List<Double> getWheelVelocities() {
-        // TODO: If your encoder velocity can exceed 32767 counts / second (such as the REV Through Bore and other
-        //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
-        //  compensation method
+
 
         return Arrays.asList(
                 encoderTicksToInches(parallelEncoder.getRawVelocity()),

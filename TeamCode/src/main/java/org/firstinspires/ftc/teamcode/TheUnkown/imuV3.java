@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TheUnkown;
 
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -18,6 +19,13 @@ public class imuV3 extends OpMode {
     public static final double kI = 0.12;
     public static final double kD = 0.053;
     public static final double kThreshold = 8;
+
+
+    private MecanumDrive driveTrain;
+
+    private MotorEx fL, fR, bL, bR;
+
+
 
     private MecanumDrivingSample mecanumDrivingSample;
     private GamepadEx driverGamepad;
@@ -42,6 +50,19 @@ public class imuV3 extends OpMode {
         driverGamepad = new GamepadEx(gamepad1);
 
 
+        fL = new MotorEx(hardwareMap, "LeftFrontDrive", MotorEx.GoBILDA.RPM_435);
+        fR = new MotorEx(hardwareMap, "RightFrontDrive", MotorEx.GoBILDA.RPM_435);
+        bL = new MotorEx(hardwareMap, "LeftBackDrive", MotorEx.GoBILDA.RPM_435);
+        bR = new MotorEx(hardwareMap, "RightBackDrive", MotorEx.GoBILDA.RPM_435);
+
+        driveTrain = new MecanumDrive(
+                fL, fR, bL, bR
+        );
+
+
+
+
+
         pid.setTolerance(kThreshold);
         pid.reset();
 
@@ -50,9 +71,12 @@ public class imuV3 extends OpMode {
         liftController = new PIDLiftController(lift);
     }
 
+
+
     @Override
     public void loop() {
         liftController.power(gamepad2.left_stick_y);
+        liftController.power(-gamepad2.left_stick_y);
 
         if (gamepad2.a) {
             liftController.setStageOne();

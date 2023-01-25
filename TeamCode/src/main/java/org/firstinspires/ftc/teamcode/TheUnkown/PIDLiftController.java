@@ -20,11 +20,11 @@ public class PIDLiftController {
     }
 
     public void setStageTwo() {
-        m_lift.moveToPosition(2 * STAGE_CONSTANT + 8);
+        m_lift.moveToPosition(2 * STAGE_CONSTANT + 20);
     }
 
     public void setStageThree() {
-        m_lift.moveToPosition(3 * STAGE_CONSTANT + 14);
+        m_lift.moveToPosition(3 * STAGE_CONSTANT + 40);
     }
 
     public void resetStage() {
