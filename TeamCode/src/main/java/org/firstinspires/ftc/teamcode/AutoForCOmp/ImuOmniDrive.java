@@ -41,6 +41,9 @@ public class ImuOmniDrive extends LinearOpMode {
     boolean oldServoButton;
     boolean oldcontrol;
 
+    public volatile boolean dpad_down;
+    public volatile boolean dpad_up;
+
 
 
     @Override
@@ -56,7 +59,7 @@ public class ImuOmniDrive extends LinearOpMode {
         LeftBackDrive = hardwareMap.get(DcMotor.class, "LeftBackDrive");
 
         LiftMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
-        LiftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
 
         RightServo = hardwareMap.get(Servo.class, "RightServo");
         LeftServo = hardwareMap.get(Servo.class, "LeftServo");
@@ -67,11 +70,22 @@ public class ImuOmniDrive extends LinearOpMode {
         oldServoButton = false;
         oldcontrol = false;
 
+        double power;
+
 
         RightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         RightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         LeftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         LeftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
+        LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -146,18 +160,32 @@ public class ImuOmniDrive extends LinearOpMode {
 
 
             //grab cone
-            if (gamepad2.right_bumper) {
+            if (gamepad1.right_bumper) {
                 RightServo.setPosition(.35);
                 LeftServo.setPosition(.65);
                 //let go of cone
-            } else if (gamepad2.left_bumper){
+            } else if (gamepad1.left_bumper){
                 RightServo.setPosition(.55);
                 LeftServo.setPosition(.48);
             }
 
+            if (gamepad1.dpad_up) {
 
-            LiftMotor.setPower(gamepad2.right_trigger);
-            LiftMotor.setPower(-gamepad2.left_trigger);
+                LiftMotor.setPower(1);
+            }
+            else if (gamepad1.dpad_down) {
+                LiftMotor.setPower(-1);
+            } else if (!gamepad1.dpad_down && !gamepad2.dpad_up) {
+                LiftMotor.setPower(0);
+            }
+
+
+
+           // LiftMotor.setPower(gamepad2.dpad_up);
+         //   LiftMotor.setPower(gamepad2.dpad_down);
+
+
+
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);

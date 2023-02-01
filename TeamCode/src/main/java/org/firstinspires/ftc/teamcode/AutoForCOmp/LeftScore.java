@@ -69,6 +69,7 @@ public class LeftScore extends LinearOpMode
         LiftMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
         LiftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 

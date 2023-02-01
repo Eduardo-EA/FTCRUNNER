@@ -15,9 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 @TeleOp (name = "imuV3")
 public class imuV3 extends OpMode {
 
-    public static final double kP = 0.003;
-    public static final double kI = 0.12;
-    public static final double kD = 0.053;
+    public static final double kP = 1;
+    public static final double kI = 1;
+    public static final double kD = 1;
     public static final double kThreshold = 8;
 
 
