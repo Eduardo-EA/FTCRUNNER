@@ -78,7 +78,7 @@ public class RIghtParkV3 extends LinearOpMode
 
         //Lift Motor THe speed is 1
         LiftMotor.setPower(LiftSpeed);
-        sleep(500);    //Change sleep timer for the duration of the motor lift
+        sleep(700);    //Change sleep timer for the duration of the motor lift
         LiftMotor.setPower(0);
 
 
@@ -145,7 +145,7 @@ public class RIghtParkV3 extends LinearOpMode
 
         TrajectorySequence park1 = drive.trajectorySequenceBuilder(new Pose2d(39.04, -63.21, Math.toRadians(90.00)))
                 .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00))) // center on first square
-                .lineToLinearHeading(new Pose2d(34.79, -10.77, Math.toRadians(90.52))) //goes forward to 3 square
+                .lineToLinearHeading(new Pose2d(34.79, -10.77, Math.toRadians(90))) //goes forward to 3 square
                 .addTemporalMarker(.1, () -> {
                     // This marker runs two seconds into the trajectory
                     LiftMotor.setPower(-.2);
@@ -153,45 +153,9 @@ public class RIghtParkV3 extends LinearOpMode
 
                     // Run your action in here!
                 })
-                .lineToLinearHeading(new Pose2d(30.40, -7.54, Math.toRadians(138.24))) // turns torwards junction and move forward
-                .addTemporalMarker(3, () -> {
-                    // This marker runs two seconds into the trajectory
-                    LiftMotor.setPower(0);
 
-
-                    // Run your action in here!
-                })
-                //.waitSeconds(2)  cam commit
-                .addTemporalMarker(2.5, () -> {
-
-                    LiftMotor.setPower(.5);
-
-                })
-                .addTemporalMarker(3, () -> {
-
-                    RightServo.setPosition(.55);
-                    LeftServo.setPosition(.48);
-
-                })
-               // .waitSeconds(2)
-                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(83.33))) //
-                .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
-
-
-
-                .build();
-
-        TrajectorySequence park2 = drive.trajectorySequenceBuilder(new Pose2d(39.04, -63.21, Math.toRadians(90.00)))
-                .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00))) // center on first square
-                .lineToLinearHeading(new Pose2d(34.79, -10.77, Math.toRadians(90.52))) //goes forward to 3 square
-                .addTemporalMarker(.1, () -> {
-                    // This marker runs two seconds into the trajectory
-                    LiftMotor.setPower(-.2);
-
-
-                    // Run your action in here!
-                })
-                .lineToLinearHeading(new Pose2d(30.40, -7.54, Math.toRadians(138.24))) // turns torwards junction and move forward
+                .lineToLinearHeading(new Pose2d(2.40, -7.54, Math.toRadians(138.24))) // turns torwards junction and move forward
+                .waitSeconds(1)
                 .addTemporalMarker(3, () -> {
                     // This marker runs two seconds into the trajectory
                     LiftMotor.setPower(0);
@@ -204,7 +168,9 @@ public class RIghtParkV3 extends LinearOpMode
 
                     LiftMotor.setPower(.8);
 
+
                 })
+
                 .addTemporalMarker(3, () -> {
 
                     RightServo.setPosition(.55);
@@ -212,15 +178,96 @@ public class RIghtParkV3 extends LinearOpMode
 
                 })
                 // .waitSeconds(2)
-                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(83.33))) //
-               // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
+                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90))) // 34.64
+              //  .waitSeconds(1)//\.a
+               // .lineToLinearHeading(new Pose2d(10, -11.50, Math.toRadians(90)))
+
+                // .addSpatialMarker((34.64,-50))
+                // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
+
+
 
                 .build();
+
+
+
+
+
+
+
+
+
+
+
+
+        TrajectorySequence park2 = drive.trajectorySequenceBuilder(new Pose2d(39.04, -63.21, Math.toRadians(90.00)))
+                .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00))) // center on first square
+                .lineToLinearHeading(new Pose2d(34.79, -10.77, Math.toRadians(90))) //goes forward to 3 square
+                .addTemporalMarker(.1, () -> {
+                    // This marker runs two seconds into the trajectory
+                    LiftMotor.setPower(-.2);
+
+
+                    // Run your action in here!
+                })
+
+                .lineToLinearHeading(new Pose2d(2.40, -7.54, Math.toRadians(138.24))) // turns torwards junction and move forward
+                .waitSeconds(1)
+                .addTemporalMarker(3, () -> {
+                    // This marker runs two seconds into the trajectory
+                    LiftMotor.setPower(0);
+
+
+                    // Run your action in here!
+                })
+                //.waitSeconds(2)  cam commit
+                .addTemporalMarker(2.5, () -> {
+
+                    LiftMotor.setPower(.8);
+
+
+                })
+
+                .addTemporalMarker(3, () -> {
+
+                    RightServo.setPosition(.55);
+                    LeftServo.setPosition(.48);
+
+                })
+                // .waitSeconds(2)
+                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90))) //\.a
+               // .addSpatialMarker((34.64,-50))
+               // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
+
+
+
+                .build();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         TrajectorySequence park3 = drive.trajectorySequenceBuilder(new Pose2d(39.04, -63.21, Math.toRadians(90.00)))
                 .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00))) // center on first square
-                .lineToLinearHeading(new Pose2d(34.79, -10.77, Math.toRadians(90.52))) //goes forward to 3 square
+                .lineToLinearHeading(new Pose2d(34.79, -10.77, Math.toRadians(90))) //goes forward to 3 square
                 .addTemporalMarker(.1, () -> {
                     // This marker runs two seconds into the trajectory
                     LiftMotor.setPower(-.2);
@@ -228,7 +275,9 @@ public class RIghtParkV3 extends LinearOpMode
 
                     // Run your action in here!
                 })
-                .lineToLinearHeading(new Pose2d(30.40, -7.54, Math.toRadians(138.24))) // turns torwards junction and move forward
+
+                .lineToLinearHeading(new Pose2d(2.40, -7.54, Math.toRadians(138.24))) // turns torwards junction and move forward
+                .waitSeconds(1)
                 .addTemporalMarker(3, () -> {
                     // This marker runs two seconds into the trajectory
                     LiftMotor.setPower(0);
@@ -241,7 +290,9 @@ public class RIghtParkV3 extends LinearOpMode
 
                     LiftMotor.setPower(.8);
 
+
                 })
+
                 .addTemporalMarker(3, () -> {
 
                     RightServo.setPosition(.55);
@@ -249,8 +300,12 @@ public class RIghtParkV3 extends LinearOpMode
 
                 })
                 // .waitSeconds(2)
-                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(83.33))) //
-                 .lineToLinearHeading(new Pose2d(57.6, -12.82, Math.toRadians(90.00)))
+                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90))) //\.a
+                // .addSpatialMarker((34.64,-50))
+                // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
+
+
+
                 .build();
 
 

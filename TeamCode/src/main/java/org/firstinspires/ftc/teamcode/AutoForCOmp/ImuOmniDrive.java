@@ -151,31 +151,38 @@ public class ImuOmniDrive extends LinearOpMode {
                 leftBackPower   /= max;
                 rightBackPower  /= max;
             }
-
+/*
             LeftFrontDrive.setPower(leftFrontPower *2/3);
             RightFrontDrive.setPower(rightFrontPower *2/3);
             LeftBackDrive.setPower(leftBackPower *2/3);
             RightBackDrive.setPower(rightBackPower *2/3);
 
+ */
+            LeftFrontDrive.setPower(leftFrontPower * 3/4);
+            RightFrontDrive.setPower(rightFrontPower * 3/4);
+            LeftBackDrive.setPower(leftBackPower* 3/4);
+            RightBackDrive.setPower(rightBackPower * 3/4 );
+
+
 
 
             //grab cone
-            if (gamepad1.right_bumper) {
+            if (gamepad2.right_bumper) {
                 RightServo.setPosition(.35);
                 LeftServo.setPosition(.65);
                 //let go of cone
-            } else if (gamepad1.left_bumper){
+            } else if (gamepad2.left_bumper){
                 RightServo.setPosition(.55);
                 LeftServo.setPosition(.48);
             }
 
-            if (gamepad1.dpad_up) {
+            if (gamepad2.dpad_up) {
 
                 LiftMotor.setPower(1);
             }
-            else if (gamepad1.dpad_down) {
+            else if (gamepad2.dpad_down) {
                 LiftMotor.setPower(-1);
-            } else if (!gamepad1.dpad_down && !gamepad2.dpad_up) {
+            } else if (!gamepad2.dpad_down && !gamepad2.dpad_up) {
                 LiftMotor.setPower(0);
             }
 
