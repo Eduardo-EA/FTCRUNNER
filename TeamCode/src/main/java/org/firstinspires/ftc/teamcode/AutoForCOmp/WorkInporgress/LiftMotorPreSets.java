@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.AutoForCOmp.WorkInporgress;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
+@Disabled
 @TeleOp(name="LiftControlPreSets", group="TeleOp")
 public class LiftMotorPreSets extends OpMode {
     private DcMotor motor;
@@ -22,7 +23,7 @@ public class LiftMotorPreSets extends OpMode {
     public void loop() {
         if (gamepad1.a) {
             motor.setTargetPosition(positionA);
-            motor.setPower(0.5);
+            motor.setPower(1);
             while (motor.isBusy()) {
                 // wait until the motor reaches the target position
             }
@@ -30,7 +31,7 @@ public class LiftMotorPreSets extends OpMode {
             telemetry.addData("Motor Position", "A");
         } else if (gamepad1.b) {
             motor.setTargetPosition(positionB);
-            motor.setPower(0.5);
+            motor.setPower(1);
             while (motor.isBusy()) {
                 // wait until the motor reaches the target position
             }
@@ -38,7 +39,7 @@ public class LiftMotorPreSets extends OpMode {
             telemetry.addData("Motor Position", "B");
         } else if (gamepad1.y) {
             motor.setTargetPosition(positionY);
-            motor.setPower(0.5);
+            motor.setPower(1);
             while (motor.isBusy()) {
                 // wait until the motor reaches the target position
             }
