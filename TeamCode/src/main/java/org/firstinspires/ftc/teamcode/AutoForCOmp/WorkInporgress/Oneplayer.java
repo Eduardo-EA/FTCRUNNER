@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AutoForCOmp;
+package org.firstinspires.ftc.teamcode.AutoForCOmp.WorkInporgress;
 
 
 import static java.lang.Math.cos;
@@ -22,8 +22,8 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.File;
 
-@TeleOp(name="THIS IS THE TELOP FOR COMP!!!!!", group="Linear Opmode")
-public class ImuOmniDrive extends LinearOpMode {
+@TeleOp(name="oneplayer", group="Linear Opmode")
+public class Oneplayer extends LinearOpMode {
     final ElapsedTime runtime = new ElapsedTime();  //delete final if prob
     DcMotor RightFrontDrive;
     DcMotor LeftFrontDrive;
@@ -43,8 +43,6 @@ public class ImuOmniDrive extends LinearOpMode {
 
     public volatile boolean dpad_down;
     public volatile boolean dpad_up;
-
-
 
 
 
@@ -169,34 +167,22 @@ public class ImuOmniDrive extends LinearOpMode {
 
 
             //grab cone
-           /* if (gamepad2.right_bumper) {
+            if (gamepad1.right_bumper) {
                 RightServo.setPosition(.35);
                 LeftServo.setPosition(.65);
                 //let go of cone
-            } else if (gamepad2.left_bumper){
+            } else if (gamepad1.left_bumper){
                 RightServo.setPosition(.55);
                 LeftServo.setPosition(.48);
             }
 
-            */
-
-
-            if (gamepad2.a) {
-                RightServo.setPosition(.35);
-                LeftServo.setPosition(.65);
-                //let go of cone
-            } else if (gamepad2.b){
-                RightServo.setPosition(.55);
-                LeftServo.setPosition(.48);
-            }
-
-            if (gamepad2.dpad_up) {
+            if (gamepad1.dpad_down) {
 
                 LiftMotor.setPower(1);
             }
-            else if (gamepad2.dpad_down) {
+            else if (gamepad1.dpad_up) {
                 LiftMotor.setPower(-1);
-            } else if (!gamepad2.dpad_down && !gamepad2.dpad_up) {
+            } else if (!gamepad1.dpad_down && !gamepad2.dpad_up) {
                 LiftMotor.setPower(0);
             }
 

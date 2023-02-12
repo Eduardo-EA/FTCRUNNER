@@ -154,7 +154,7 @@ public class LEFTParkV3 extends LinearOpMode
                     // Run your action in here!
                 })
 
-                .lineToLinearHeading(new Pose2d(31.5, -6.5, Math.toRadians(45))) // turns torwards junction and move forward
+                .lineToLinearHeading(new Pose2d(37.80, -7.88, Math.toRadians(55))) // turns torwards junction and move forward
                 .waitSeconds(1)
                 .addTemporalMarker(3, () -> {
                     // This marker runs two seconds into the trajectory
@@ -209,7 +209,7 @@ public class LEFTParkV3 extends LinearOpMode
                     // Run your action in here!
                 })
 
-                .lineToLinearHeading(new Pose2d(31.5, -6.5, Math.toRadians(138.24))) // turns torwards junction and move forward
+                .lineToLinearHeading(new Pose2d(37.80, -7.88, Math.toRadians(55)))  // turns torwards junction and move forward
                 .waitSeconds(1)
                 .addTemporalMarker(3, () -> {
                     // This marker runs two seconds into the trajectory
@@ -233,7 +233,7 @@ public class LEFTParkV3 extends LinearOpMode
 
                 })
                 // .waitSeconds(2)
-                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90)))//\.a
+                .lineToLinearHeading(new Pose2d(34.64, -12.50, Math.toRadians(90)))//\.a
            //     .lineToLinearHeading(new Pose2d(14,-11.50, Math.toRadians(90)))
                 // .addSpatialMarker((34.64,-50))
                 // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
@@ -275,7 +275,7 @@ public class LEFTParkV3 extends LinearOpMode
                     // Run your action in here!
                 })
 
-                .lineToLinearHeading(new Pose2d(34.80, -10.88, Math.toRadians(45))) // turns torwards junction and move forward
+                .lineToLinearHeading(new Pose2d(37.80, -7.88, Math.toRadians(55))) // turns torwards junction and move forward
                 .waitSeconds(1)
                 .addTemporalMarker(3, () -> {
                     // This marker runs two seconds into the trajectory
@@ -300,7 +300,12 @@ public class LEFTParkV3 extends LinearOpMode
                 })
                 // .waitSeconds(2)
                // .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90))) //\.a
-               // .lineToLinearHeading(new Pose2d(52.5,-11.5, Math.toRadians(90)))
+
+
+
+                .lineToLinearHeading(new Pose2d(52.5,-11.5, Math.toRadians(90)))
+
+
                 // .addSpatialMarker((34.64,-50))
                 // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
 
@@ -388,7 +393,7 @@ public class LEFTParkV3 extends LinearOpMode
 
 
         if(tagOfInterest == null){
-            drive.followTrajectorySequence(park3);
+            drive.followTrajectorySequence(park2);
 
         }else{
             switch(tagOfInterest.id){

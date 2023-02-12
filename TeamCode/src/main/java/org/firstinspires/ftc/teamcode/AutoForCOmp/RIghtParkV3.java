@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -20,7 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-//@Disabled
+@Disabled
 @Config
 @Autonomous
 public class RIghtParkV3 extends LinearOpMode
@@ -63,9 +64,10 @@ public class RIghtParkV3 extends LinearOpMode
         RightServo = hardwareMap.get(Servo.class,"RightServo");
         LeftServo = hardwareMap.get(Servo.class,"LeftServo");
 
+
         //Close servos
-        RightServo.setPosition(.35);
-        LeftServo.setPosition(.65);
+       // RightServo.setPosition(.35);
+       // LeftServo.setPosition(.65);
 
 
         LiftMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
@@ -179,7 +181,7 @@ public class RIghtParkV3 extends LinearOpMode
                 })
                 // .waitSeconds(2)
                 .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90))) //\.a
-                .lineToLinearHeading(new Pose2d(14,-11.50, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(14,-12.50, Math.toRadians(90)))
                 // .addSpatialMarker((34.64,-50))
                 // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
 
@@ -233,7 +235,7 @@ public class RIghtParkV3 extends LinearOpMode
 
                 })
                 // .waitSeconds(2)
-                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90)))//\.a
+                .lineToLinearHeading(new Pose2d(34.64, -12.50, Math.toRadians(90)))//\.a
            //     .lineToLinearHeading(new Pose2d(14,-11.50, Math.toRadians(90)))
                 // .addSpatialMarker((34.64,-50))
                 // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
@@ -300,7 +302,7 @@ public class RIghtParkV3 extends LinearOpMode
                 })
                 // .waitSeconds(2)
                 .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90))) //\.a
-                .lineToLinearHeading(new Pose2d(52.5,-11.5, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(52.5,-12.5, Math.toRadians(90)))
                 // .addSpatialMarker((34.64,-50))
                 // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
 
