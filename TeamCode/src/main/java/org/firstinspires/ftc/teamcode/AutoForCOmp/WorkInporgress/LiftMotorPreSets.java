@@ -6,47 +6,57 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name="LiftControlPreSets", group="TeleOp")
 public class LiftMotorPreSets extends OpMode {
     private DcMotor motor;
-   // private int positionA = 0;
-    //private int positionB = 100;
-   // private int positionY = 200;
+    private static final double COUNTS_PER_ROTATION = 751.8;
+
+
+    double High = 10;
+    double middle = 5;
+    double low = 3;
+
+
 
     @Override
     public void init() {
         motor = hardwareMap.get(DcMotor.class, "LiftMotor");
-
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
     public void loop() {
-        if (gamepad1.a) {
-            motor.setTargetPosition(0);
-            motor.setPower(1);
-            while (motor.isBusy()) {
-                // wait until the motor reaches the target position
-            }
-            motor.setPower(0);
-            telemetry.addData("Motor Position", "A");
-        } else if (gamepad1.b) {
-            motor.setTargetPosition(111);
-            motor.setPower(1);
-            while (motor.isBusy()) {
-                // wait until the motor reaches the target position
-            }
-            motor.setPower(0);
-            telemetry.addData("Motor Position", "B");
-        } else if (gamepad1.y) {
-            motor.setTargetPosition(200);
-            motor.setPower(1);
-            while (motor.isBusy()) {
-                // wait until the motor reaches the target position
-            }
-            motor.setPower(0);
-            telemetry.addData("Motor Position", "Y");
-        } else {
-            telemetry.addData("Motor Position", "None");
+      if (gamepad1.a) {
+          double targetPosition = COUNTS_PER_ROTATION * High;
+          motor.setTargetPosition((int) targetPosition);
+          motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          motor.setPower(1);
+      } else if (gamepad1.b){
+          double targetPosition = COUNTS_PER_ROTATION * middle;
+          motor.setTargetPosition((int) targetPosition);
+          motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          motor.setPower(1);
+      }else if (gamepad1.y){
+          double targetPosition = COUNTS_PER_ROTATION * low;
+          motor.setTargetPosition((int) targetPosition);
+          motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          motor.setPower(1);
+      } else if (gamepad1.x){
+          motor.setTargetPosition(0);
+          motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          motor.setPower(1);
+      }else {
+          motor.setPower(0);
+          motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+      }
+
+        while (motor.isBusy()) {
+            telemetry.addData("Current Position", motor.getCurrentPosition());
+            telemetry.addData("Target Position", motor.getTargetPosition());
+            telemetry.update();
         }
-        telemetry.update();
+        motor.setPower(0);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+
 }
