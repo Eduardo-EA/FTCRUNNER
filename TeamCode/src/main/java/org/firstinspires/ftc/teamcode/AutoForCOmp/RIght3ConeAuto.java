@@ -328,7 +328,7 @@ public class RIght3ConeAuto extends LinearOpMode
                 .lineToLinearHeading(new Pose2d(35,-10,Math.toRadians(5)))
                 .lineToLinearHeading(new Pose2d(37,-8,Math.toRadians(5)))
                 .lineToLinearHeading(new Pose2d(40,-11,Math.toRadians(5)))
-                .lineToLinearHeading(new Pose2d(56,-11,Math.toRadians(5)))
+                .lineToLinearHeading(new Pose2d(58,-11,Math.toRadians(5)))
                 .addTemporalMarker(5, () -> {
 
                     LiftMotor.setPower(-.8);
