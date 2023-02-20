@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.AutoForCOmp.WorkInporgress;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
 @TeleOp(name="LiftControlPreSets", group="TeleOp")
 public class LiftMotorPreSets extends OpMode {
     private DcMotor motor;
@@ -54,8 +55,16 @@ public class LiftMotorPreSets extends OpMode {
             telemetry.addData("Target Position", motor.getTargetPosition());
             telemetry.update();
         }
-        motor.setPower(0);
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // motor.setPower(0);
+        //motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        if (gamepad1.right_bumper){
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setPower(1);
+        } else if (gamepad1.left_bumper) {
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setPower(-1);
+        }
     }
 
 
