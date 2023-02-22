@@ -25,7 +25,7 @@ public class PIDTEST extends LinearOpMode {
 
 
 
-    double high = (10 * COUNTS_PER_ROTATION);
+    double high = (2 * COUNTS_PER_ROTATION);
 
 
     private static final double COUNTS_PER_ROTATION = 751.8;
@@ -62,7 +62,7 @@ public class PIDTEST extends LinearOpMode {
            // wait(10);
 
             if (gamepad1.a) {
-                double targetPosition = COUNTS_PER_ROTATION * 10;
+                double targetPosition = COUNTS_PER_ROTATION * 3.5;
                 motor.setTargetPosition((int) targetPosition);
                 motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motor.setPower(power);
