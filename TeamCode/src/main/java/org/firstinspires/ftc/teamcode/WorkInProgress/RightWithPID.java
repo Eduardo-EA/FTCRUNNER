@@ -63,7 +63,7 @@ public class RightWithPID extends LinearOpMode
     double derivative = 0; //change in error over time
     double high = (3.5 * COUNTS_PER_ROTATION);
 
-    private static final double COUNTS_PER_ROTATION = 751.8;
+    private static final double COUNTS_PER_ROTATION = 394.5;
 
 
 
@@ -200,7 +200,7 @@ public class RightWithPID extends LinearOpMode
 
                 .lineToLinearHeading(new Pose2d(28.5, -6.5, Math.toRadians(138)))// turns torwards junction and move forward
                 .addTemporalMarker(3,() -> {
-                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * .75));
+                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * .76));
                     LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     LiftMotor.setPower(power);
                 })
@@ -209,8 +209,34 @@ public class RightWithPID extends LinearOpMode
                     LeftServo.setPosition(.48);
 
                 })
-                .waitSeconds(1)
+                .waitSeconds(2)
                 .lineToLinearHeading(new Pose2d(34.64, -12.50, Math.toRadians(90)))//\.a
+
+
+                //new stuff here yay
+                    //turns to the cone stack
+                .lineToLinearHeading(new Pose2d(34.64,-10.5,Math.toRadians(8)))
+
+                // goes to the cone stack
+                .lineToLinearHeading(new Pose2d(58,-10.5,Math.toRadians(8)))
+                .addTemporalMarker(7.3, () ->{
+                    RightServo.setPosition(.35);
+                    LeftServo.setPosition(.65);
+                })
+
+                .addTemporalMarker(8, () ->{
+                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * 3.8));
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
+                })
+                .waitSeconds(1.5)
+                .lineToLinearHeading(new Pose2d(34.64,-12.50, Math.toRadians(125)))
+
+
+
+
+                .waitSeconds(5)
+
                 .build();
 
 
