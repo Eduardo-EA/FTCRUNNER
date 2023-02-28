@@ -20,7 +20,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-//  @Disabled
 @Config
 @Autonomous
 public class RightWithPID extends LinearOpMode
