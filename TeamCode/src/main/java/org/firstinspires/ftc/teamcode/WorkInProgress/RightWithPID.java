@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
@@ -125,51 +126,132 @@ public class RightWithPID extends LinearOpMode
                 .addDisplacementMarker(() ->{
                     RightServo.setPosition(.35);
                     LeftServo.setPosition(.65);
-
                 })
-
-                .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00))) // center on first square
+                .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                // center on first square
                 .lineToLinearHeading(new Pose2d(34.79, -10.77, Math.toRadians(90))) //goes forward to 3 square
-                .addTemporalMarker(.1, () -> {
-                    // This marker runs two seconds into the trajectory
-                    LiftMotor.setPower(.2); // was -2
-
-
-                    // Run your action in here!
+                .addTemporalMarker(.3, () -> {
+                    double targetPosition = COUNTS_PER_ROTATION * 3.8;
+                    LiftMotor.setTargetPosition((int) targetPosition);
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
                 })
+//28.5 -6.5
+                .lineToLinearHeading(new Pose2d(28, -6, Math.toRadians(138)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))// turns torwards junction and move forward
+                .addTemporalMarker(3.2,() -> {
+                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * .76));
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
+                })
+                .addTemporalMarker(3.4, () -> {
+                    RightServo.setPosition(.55);
+                    LeftServo.setPosition(.48);
 
-                .lineToLinearHeading(new Pose2d(31.5, -6.5, Math.toRadians(138.24))) // turns torwards junction and move forward
+                })
                 .waitSeconds(1)
-                .addTemporalMarker(3, () -> {
-                    // This marker runs two seconds into the trajectory
-                    LiftMotor.setPower(0);
+                .lineToLinearHeading(new Pose2d(34.64, -12.50, Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))//\.a
 
 
-                    // Run your action in here!
+                //new stuff here yay
+                //turns to the cone stack
+                .lineToLinearHeading(new Pose2d(34.64,-10.5,Math.toRadians(8)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+
+                // goes to the cone stack
+                .lineToLinearHeading(new Pose2d(58,-10.5,Math.toRadians(8)))
+                .addTemporalMarker(7.3, () ->{
+                    RightServo.setPosition(.35);
+                    LeftServo.setPosition(.65);
                 })
-                //.waitSeconds(2)  cam commit
-                .addTemporalMarker(2.5, () -> {
 
-                    LiftMotor.setPower(-.8);
+                .addTemporalMarker(8, () ->{
+                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * 3.8));
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
+                })
+                .waitSeconds(2)
+
+
+
+                //32.64,-10.50 lined up to the high junction //.lineToLinearHeading(new Pose2d(31,-9, Math.toRadians(125)))
+
+                //.lineToLinearHeading(new Pose2d(29.64,-11.5, Math.toRadians(0)))
+
+                //this slows down need to test
+                .lineToLinearHeading(
+                        new Pose2d(34.29,-12.84,Math.toRadians(0)),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+
+                .lineToLinearHeading(
+                        new Pose2d(23,-10.84,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(23,-6.84,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .addDisplacementMarker(()-> {
+                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * .76));
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
 
 
                 })
-
-
-                .addTemporalMarker(3, () -> {
+                .addDisplacementMarker(()-> {
 
                     RightServo.setPosition(.55);
                     LeftServo.setPosition(.48);
-                    LiftMotor.setPower(0);
-
                 })
-                // .waitSeconds(2)
-                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90))) //\.a
-                .lineToLinearHeading(new Pose2d(14,-12.50, Math.toRadians(90)))
-                // .addSpatialMarker((34.64,-50))
-                // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
 
 
+                .waitSeconds(.2)
+
+
+
+
+
+                //Parking
+                .lineToLinearHeading(
+                        new Pose2d(23,-10.50,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(34,-10.5,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(34,-13.5,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(15,-13.5,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+
+
+
+
+
+
+
+
+
+                .waitSeconds(5)
 
                 .build();
 
@@ -189,7 +271,10 @@ public class RightWithPID extends LinearOpMode
                     RightServo.setPosition(.35);
                     LeftServo.setPosition(.65);
                 })
-                .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00))) // center on first square
+                .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                // center on first square
                 .lineToLinearHeading(new Pose2d(34.79, -10.77, Math.toRadians(90))) //goes forward to 3 square
                 .addTemporalMarker(.3, () -> {
                     double targetPosition = COUNTS_PER_ROTATION * 3.8;
@@ -197,9 +282,11 @@ public class RightWithPID extends LinearOpMode
                     LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     LiftMotor.setPower(power);
                 })
-
-                .lineToLinearHeading(new Pose2d(28.5, -6.5, Math.toRadians(138)))// turns torwards junction and move forward
-                .addTemporalMarker(3,() -> {
+//28.5 -6.5
+                .lineToLinearHeading(new Pose2d(28, -6, Math.toRadians(138)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))// turns torwards junction and move forward
+                .addTemporalMarker(3.2,() -> {
                     LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * .76));
                     LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     LiftMotor.setPower(power);
@@ -209,13 +296,17 @@ public class RightWithPID extends LinearOpMode
                     LeftServo.setPosition(.48);
 
                 })
-                .waitSeconds(2)
-                .lineToLinearHeading(new Pose2d(34.64, -12.50, Math.toRadians(90)))//\.a
+                .waitSeconds(1)
+                .lineToLinearHeading(new Pose2d(34.64, -12.50, Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))//\.a
 
 
                 //new stuff here yay
                     //turns to the cone stack
-                .lineToLinearHeading(new Pose2d(34.64,-10.5,Math.toRadians(8)))
+                .lineToLinearHeading(new Pose2d(34.64,-10.5,Math.toRadians(8)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
                 // goes to the cone stack
                 .lineToLinearHeading(new Pose2d(58,-10.5,Math.toRadians(8)))
@@ -229,8 +320,72 @@ public class RightWithPID extends LinearOpMode
                     LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     LiftMotor.setPower(power);
                 })
-                .waitSeconds(1.5)
-                .lineToLinearHeading(new Pose2d(34.64,-12.50, Math.toRadians(125)))
+                .waitSeconds(2)
+
+
+
+                //32.64,-10.50 lined up to the high junction //.lineToLinearHeading(new Pose2d(31,-9, Math.toRadians(125)))
+
+                //.lineToLinearHeading(new Pose2d(29.64,-11.5, Math.toRadians(0)))
+
+                //this slows down need to test
+                .lineToLinearHeading(
+                        new Pose2d(34.29,-12.84,Math.toRadians(0)),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+
+                .lineToLinearHeading(
+                        new Pose2d(23,-10.84,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(23,-6.84,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .addDisplacementMarker(()-> {
+                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * .76));
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
+
+
+                })
+                .addDisplacementMarker(()-> {
+
+                    RightServo.setPosition(.55);
+                    LeftServo.setPosition(.48);
+                })
+
+
+                .waitSeconds(.2)
+
+
+
+
+
+                //Parking
+                .lineToLinearHeading(
+                        new Pose2d(23,-10.50,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(34,-10.5,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(34,-13.5,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+
+
+
+
+             //   .lineToLinearHeading(new Pose2d(29,-10.50, Math.toRadians(90)))
 
 
 
@@ -265,51 +420,132 @@ public class RightWithPID extends LinearOpMode
                 .addDisplacementMarker(() ->{
                     RightServo.setPosition(.35);
                     LeftServo.setPosition(.65);
-
                 })
-
-                .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00))) // center on first square
+                .lineToLinearHeading(new Pose2d(34, -58.96, Math.toRadians(90.00)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                // center on first square
                 .lineToLinearHeading(new Pose2d(34.79, -10.77, Math.toRadians(90))) //goes forward to 3 square
-                .addTemporalMarker(.1, () -> {
-                    // This marker runs two seconds into the trajectory
-                    LiftMotor.setPower(.2); // was -2
-
-
-                    // Run your action in here!
+                .addTemporalMarker(.3, () -> {
+                    double targetPosition = COUNTS_PER_ROTATION * 3.8;
+                    LiftMotor.setTargetPosition((int) targetPosition);
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
                 })
+//28.5 -6.5
+                .lineToLinearHeading(new Pose2d(28, -6, Math.toRadians(138)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))// turns torwards junction and move forward
+                .addTemporalMarker(3.2,() -> {
+                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * .76));
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
+                })
+                .addTemporalMarker(3.4, () -> {
+                    RightServo.setPosition(.55);
+                    LeftServo.setPosition(.48);
 
-                .lineToLinearHeading(new Pose2d(31.5, -6.5, Math.toRadians(138.24))) // turns torwards junction and move forward
+                })
                 .waitSeconds(1)
-                .addTemporalMarker(3, () -> {
-                    // This marker runs two seconds into the trajectory
-                    LiftMotor.setPower(0);
+                .lineToLinearHeading(new Pose2d(34.64, -12.50, Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))//\.a
 
 
-                    // Run your action in here!
+                //new stuff here yay
+                //turns to the cone stack
+                .lineToLinearHeading(new Pose2d(34.64,-10.5,Math.toRadians(8)),
+                        SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+
+                // goes to the cone stack
+                .lineToLinearHeading(new Pose2d(58,-10.5,Math.toRadians(8)))
+                .addTemporalMarker(7.3, () ->{
+                    RightServo.setPosition(.35);
+                    LeftServo.setPosition(.65);
                 })
-                //.waitSeconds(2)  cam commit
-                .addTemporalMarker(2.5, () -> {
 
-                    LiftMotor.setPower(-.8);
+                .addTemporalMarker(8, () ->{
+                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * 3.8));
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
+                })
+                .waitSeconds(2)
+
+
+
+                //32.64,-10.50 lined up to the high junction //.lineToLinearHeading(new Pose2d(31,-9, Math.toRadians(125)))
+
+                //.lineToLinearHeading(new Pose2d(29.64,-11.5, Math.toRadians(0)))
+
+                //this slows down need to test
+                .lineToLinearHeading(
+                        new Pose2d(34.29,-12.84,Math.toRadians(0)),
+                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+
+                .lineToLinearHeading(
+                        new Pose2d(23,-10.84,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(23,-6.84,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .addDisplacementMarker(()-> {
+                    LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * .76));
+                    LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    LiftMotor.setPower(power);
 
 
                 })
-
-
-                .addTemporalMarker(3, () -> {
+                .addDisplacementMarker(()-> {
 
                     RightServo.setPosition(.55);
                     LeftServo.setPosition(.48);
-                    LiftMotor.setPower(0);
-
                 })
-                // .waitSeconds(2)
-                .lineToLinearHeading(new Pose2d(34.64, -11.50, Math.toRadians(90))) //\.a
-                .lineToLinearHeading(new Pose2d(52.5,-12.5, Math.toRadians(90)))
-                // .addSpatialMarker((34.64,-50))
-                // .lineToLinearHeading(new Pose2d(12.67, -12.82, Math.toRadians(90.00)))
 
 
+                .waitSeconds(.2)
+
+
+
+
+
+                //Parking
+                .lineToLinearHeading(
+                        new Pose2d(23,-10.50,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(34,-10.5,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(34,-13.5,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+                .lineToLinearHeading(
+                        new Pose2d(53,-13.5,Math.toRadians(90)),
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
+
+
+
+
+
+
+
+
+
+                .waitSeconds(5)
 
                 .build();
 
@@ -396,7 +632,7 @@ public class RightWithPID extends LinearOpMode
 
 
         if(tagOfInterest == null){
-            drive.followTrajectorySequence(park2);
+            drive.followTrajectorySequence(park1);
 
         }else{
             switch(tagOfInterest.id){
