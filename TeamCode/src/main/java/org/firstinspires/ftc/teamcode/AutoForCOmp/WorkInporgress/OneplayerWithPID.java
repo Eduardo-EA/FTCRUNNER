@@ -234,7 +234,7 @@ public class OneplayerWithPID extends LinearOpMode {
             }
 
  */
-
+                //add telemetry for the liftmotor
 
             telemetry.addData("Ticks","This is FUN: " + LiftMotor.getCurrentPosition());
 
