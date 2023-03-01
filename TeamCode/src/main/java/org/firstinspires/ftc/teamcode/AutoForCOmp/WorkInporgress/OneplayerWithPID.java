@@ -168,41 +168,75 @@ public class OneplayerWithPID extends LinearOpMode {
                 LeftServo.setPosition(.48);
             }
 
-/*
+
+
+                //This one uses a boolean for a varible if true runs with encoders but if false runs without
+            double currentpos = LiftMotor.getCurrentPosition();
+            boolean ispresent = false;
+
+            if (gamepad1.a){
+                ispresent = true;
+            }else if (gamepad1.b){
+                ispresent = true;
+            }else if (gamepad1.y){
+                ispresent = true;
+            }else if (gamepad1.dpad_up){
+                ispresent = false;
+            } else if (gamepad1.dpad_down){
+                ispresent = false;
+            }
+
+
+            if (gamepad1.a) {
+                LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * 3.8));
+                LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LiftMotor.setPower(power);
+            } else if (gamepad1.b) {
+                LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * 2));
+                LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LiftMotor.setPower(power);
+            } else if (gamepad1.y) {
+                LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * 1));
+                LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LiftMotor.setPower(power);
+            }
+
             if (gamepad1.dpad_up){
                 LiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 LiftMotor.setPower(1);
             } else if  (gamepad1.dpad_down) {
                 LiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 LiftMotor.setPower(-1);
-            } else  {
-                LiftMotor.setPower(0);
+            } else if (!ispresent) {
+                LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                LiftMotor.setTargetPosition((int) currentpos);
+                LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LiftMotor.setPower(power);
+            }
 
+/*                  Another Test But this one subtracts or add 2 front the current position
+            double lifttestright = LiftMotor.getCurrentPosition() +2;
+            double lifttestleft = LiftMotor.getCurrentPosition() -2;
+
+            if (gamepad1.right_trigger > 0) {
+                LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                LiftMotor.setTargetPosition((int) lifttestright);
+                LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LiftMotor.setPower(power);
+            } else if (gamepad1.left_trigger > 0){
+                LiftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                LiftMotor.setTargetPosition((int) lifttestleft);
+                LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LiftMotor.setPower(power);
             }
 
  */
 
 
-            if (gamepad1.a) {
-                LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * 3.8));
-                LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                LiftMotor.setPower(power);
-            } else if (gamepad1.b) {
-                LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * 2));
-                LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                LiftMotor.setPower(power);
-            } else if (gamepad1.y) {
-                LiftMotor.setTargetPosition((int) (COUNTS_PER_ROTATION * 1));
-                LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                LiftMotor.setPower(power);
-            } else if (gamepad1.dpad_up) {
-                LiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                LiftMotor.setPower(1);
-            } else if (gamepad1.dpad_down){
-                LiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                LiftMotor.setPower(-1);
-            }
-
+            telemetry.addData("Ticks","This is FUN: " + LiftMotor.getCurrentPosition());
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
